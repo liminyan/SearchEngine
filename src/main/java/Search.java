@@ -10,34 +10,21 @@ import org.apache.lucene.store.Directory;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Search {
-    public static void main(String[] args) throws IOException, ParseException {
-        GetData.getInstance();
-        GetData.setFilename("test.json");
-        BM25Similarity mySimilarity = new BM25Similarity();
-        Directory directory = GetData.getDirectory("test.json",mySimilarity);
-        DirectoryReader ireader = DirectoryReader.open(directory);
-        IndexSearcher isearcher = new IndexSearcher(ireader);
-        isearcher.setSimilarity(mySimilarity);
 
-        String[] fields = {"title"
-                ,"content"
-                };
-        Map<String,Float> boosts = new HashMap<String, Float>();
 
-        boosts.put("title",0.350f);
-        boosts.put("content",0.0110f);
+    public static void demo(MultiFieldQueryParser parser, IndexSearcher isearcher )throws IOException, ParseException
+    {
 
-        MultiFieldQueryParser parser = new MultiFieldQueryParser(fields,GetData.getAnalyzer(),boosts);
         Query query;
-
         String str = "";
         while (str!= null)
         {
-            str = JOptionPane.showInputDialog("What you query?");
+            str = JOptionPane.showInputDialog("Test query:");
             System.out.println(">:"+str);
             if (str!= null)
             {
@@ -51,6 +38,47 @@ public class Search {
             System.out.println(">>>>");
         }
 
+    }
+
+    public static void main(String[] args) throws IOException, ParseException {
+        GetData.getInstance();
+        GetData.setFilename("Data/ntcir14_test_doc.json");
+        GetQuery.getInstance();
+
+        System.out.println(System.getProperty("user.dir"));
+        GetQuery.setFilename("Data/ntcir14_test_query.json");
+        ArrayList<SQuery> qList = GetQuery.getqList();
+        BM25Similarity mySimilarity = new BM25Similarity();
+        Directory directory = GetData.getDirectory(mySimilarity);
+
+        DirectoryReader ireader = DirectoryReader.open(directory);
+        IndexSearcher isearcher = new IndexSearcher(ireader);
+        isearcher.setSimilarity(mySimilarity);
+
+        String[] fields = {
+                 "title"
+                ,"content"
+                };
+        Map<String,Float> boosts = new HashMap<String, Float>();
+
+        boosts.put("title",0.350f);
+        boosts.put("content",0.0110f);
+
+        MultiFieldQueryParser parser = new MultiFieldQueryParser(fields,GetData.getAnalyzer(),boosts);
+
+//        demo(parser,isearcher);
+        Query query;
+        for (int i = 0; i < qList.size(); i++) {
+            query = parser.parse(qList.get(i).query);
+            ScoreDoc[] hits = isearcher.search(query,10).scoreDocs;
+            for (int j = 0; j < hits.length; j++) {
+                Document hitDoc = isearcher.doc(hits[j].doc);
+                System.out.println(qList.get(i).id+" Q0 "+hitDoc.get("id")+" "+String.valueOf(j)+" "+hits[j].score+" BM25");
+
+//                System.out.println(hits[j].score+' '+hitDoc.get("title")+"   "+hitDoc.get("id"));
+//                System.out.println(String.valueOf(i)+" - "+String.valueOf(j)+' '+qList.get(i).id+" Q0 "+hitDoc.get("id")+" "+String.valueOf(j)+" "+hits[j].score+" BM25");
+            }
+        }
         ireader.close();
         directory.close();
 

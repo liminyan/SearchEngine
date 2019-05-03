@@ -1,7 +1,6 @@
 import com.chenlb.mmseg4j.analysis.ComplexAnalyzer;
 import net.sf.json.JSONObject;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.search.similarities.Similarity;
@@ -15,10 +14,11 @@ import java.io.IOException;
 
 public class GetData {
     private static GetData cur;
-    private static Data myData;
+
     private static String filename;
     private static Analyzer analyzer ;
     private static Directory directory = new RAMDirectory();
+    private static Data myData;
     public static GetData getInstance(){
         if (cur == null){
             cur = new GetData();
@@ -37,14 +37,13 @@ public class GetData {
         String content = "";
         String id = "";
         String title = "";
-        System.out.println("......");
+
+
         JSONObject jsonObject = JSONObject.fromObject(jason);
         title = jsonObject.getString("title");
         id = jsonObject.getString("uid");
         content = jsonObject.getString("content");
 
-//        System.out.println("title: "+title);
-//        System.out.println("id: "+id);
 
         myData = new Data();
         myData.setContent(content);
@@ -59,7 +58,7 @@ public class GetData {
     }
 
 
-    public static Directory getDirectory(String filename, Similarity mySimilarity) throws IOException {
+    public static Directory getDirectory(Similarity mySimilarity) throws IOException {
         analyzer = new ComplexAnalyzer();
         IndexWriterConfig config = new IndexWriterConfig(analyzer);
         config.setSimilarity(mySimilarity);
@@ -70,7 +69,7 @@ public class GetData {
 
         reader = new BufferedReader(new FileReader(file));
         String tempString = null;
-        Document doc;
+
 
 
         while ((tempString = reader.readLine()) != null) {
@@ -82,31 +81,6 @@ public class GetData {
         return directory;
 
     }
-
-//    public static void main(String[] args) throws IOException {
-//
-//        String filenam = "test.json";
-//
-//        File file = new File(filenam);
-//        BufferedReader reader = null;
-//
-//        reader = new BufferedReader(new FileReader(file));
-//        String tempString = null;
-//
-//        try {
-//
-//            while ((tempString = reader.readLine()) != null) {
-//
-//               String a = jason2Data(tempString).id;
-//               System.out.println(a);
-//            }
-//        }catch (JSONException e) {
-//            System.out.println(e);
-//        }
-//
-//        reader.close();
-//
-//    }
 
 }
 
