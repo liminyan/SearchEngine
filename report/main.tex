@@ -35,7 +35,7 @@
 		利用lucene提供的框架，实现一个简单的搜索引擎，其中通过继承SimilarityBase类重载score 实现自定义排序BM25
 		\par
 		查询区域选取为title和content两个区域	，分别计算出相关的分数之后，按照3：1加权计算得到最终的结果
-		$$BM25_{final} = BM25_{title} * 0.75 + BM25_{content} $$
+		$$BM25_{final} = BM25_{title} * 0.75 + BM25_{content} * 0.25 $$
 		\par
 		每次查询返回top20的规定结果（包括分数），提取出y\_pred，随后利用给定的ntcir14\_test\_label.txt数据文件提取出对应的y\_true，根据要求的评测指标进行计算。
 	\section{实验结果}
