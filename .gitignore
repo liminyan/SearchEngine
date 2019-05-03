@@ -1,3 +1,6 @@
 *.txt
 *.json
 /Data
+*.iml
+/targer
+/.idea
