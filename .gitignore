@@ -1,6 +1,12 @@
-*.txt
+info.txt
 *.json
 /Data
 *.iml
 /targer
 /.idea
+res.txt
+*.log
+*.fls
+*.s*
+*.a*
+*.f*

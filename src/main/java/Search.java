@@ -26,13 +26,15 @@ public class Search {
         {
             str = JOptionPane.showInputDialog("Test query:");
             System.out.println(">:"+str);
+
             if (str!= null)
             {
                 query = parser.parse(str);
+
                 ScoreDoc[] hits = isearcher.search(query,10).scoreDocs;
                 for (int i = 0; i < hits.length; i++) {
                     Document hitDoc = isearcher.doc(hits[i].doc);
-                    System.out.println(hits[i].score+' '+hitDoc.get("title")+"   "+hitDoc.get("id"));
+                    System.out.println(hits[i].score+' '+hitDoc.get("title"));
                 }
             }
             System.out.println(">>>>");
@@ -49,6 +51,8 @@ public class Search {
         GetQuery.setFilename("Data/ntcir14_test_query.json");
         ArrayList<SQuery> qList = GetQuery.getqList();
         BM25Similarity mySimilarity = new BM25Similarity();
+
+//        MySimilarity mySimilarity = new MySimilarity();
         Directory directory = GetData.getDirectory(mySimilarity);
 
         DirectoryReader ireader = DirectoryReader.open(directory);
@@ -70,10 +74,10 @@ public class Search {
         Query query;
         for (int i = 0; i < qList.size(); i++) {
             query = parser.parse(qList.get(i).query);
-            ScoreDoc[] hits = isearcher.search(query,10).scoreDocs;
+            ScoreDoc[] hits = isearcher.search(query,20).scoreDocs;
             for (int j = 0; j < hits.length; j++) {
                 Document hitDoc = isearcher.doc(hits[j].doc);
-                System.out.println(qList.get(i).id+" Q0 "+hitDoc.get("id")+" "+String.valueOf(j)+" "+hits[j].score+" BM25");
+                System.out.println(qList.get(i).id+" Q0 "+hitDoc.get("id")+" "+String.valueOf(j+1)+" "+hits[j].score+" BM25");
 
 //                System.out.println(hits[j].score+' '+hitDoc.get("title")+"   "+hitDoc.get("id"));
 //                System.out.println(String.valueOf(i)+" - "+String.valueOf(j)+' '+qList.get(i).id+" Q0 "+hitDoc.get("id")+" "+String.valueOf(j)+" "+hits[j].score+" BM25");
