@@ -5,3 +5,6 @@
 + $java -jar target/233-1.0-SNAPSHOT-jar-with-dependencies.jar > res_20.txt 执行可执行文件将结果保存到res_20.txt 
 + $python3 judge.py 评价当前的搜索引擎指标
 
+#注
++ 需要将 ntcir14_test_doc，ntcir14_test_label,ntcir14_test_query,三个文件放在Data目录下
+

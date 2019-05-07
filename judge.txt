@@ -1,0 +1,9 @@
+0.253 n_dcg k = 20
+0.142 q_mea k = 20
+0.664 n_err k = 20
+0.327 n_dcg k = 10
+0.198 q_mea k = 10
+0.661 n_err k = 10
+0.281 n_dcg k = 5
+0.225 q_mea k = 5
+0.602 n_err k = 5

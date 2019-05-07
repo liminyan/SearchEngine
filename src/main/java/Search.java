@@ -65,8 +65,8 @@ public class Search {
                 };
         Map<String,Float> boosts = new HashMap<String, Float>();
 
-        boosts.put("title",0.350f);
-        boosts.put("content",0.0110f);
+        boosts.put("title",0.30f);
+        boosts.put("content",0.010f);
 
         MultiFieldQueryParser parser = new MultiFieldQueryParser(fields,GetData.getAnalyzer(),boosts);
 
@@ -74,10 +74,25 @@ public class Search {
         Query query;
         for (int i = 0; i < qList.size(); i++) {
             query = parser.parse(qList.get(i).query);
-            ScoreDoc[] hits = isearcher.search(query,20).scoreDocs;
+            ScoreDoc[] hits = isearcher.search(query,200).scoreDocs;
             for (int j = 0; j < hits.length; j++) {
                 Document hitDoc = isearcher.doc(hits[j].doc);
-                System.out.println(qList.get(i).id+" Q0 "+hitDoc.get("id")+" "+String.valueOf(j+1)+" "+hits[j].score+" BM25");
+
+                String rank = "";
+
+                if (j < 10) {
+                    rank = "00" + String.valueOf(j + 1);
+                }
+                else
+                if (j>10 && j<100) {
+                    rank = "0" + String.valueOf(j+1);
+                }else
+                {
+                    rank = String.valueOf(j+1);
+                }
+
+
+                System.out.println(qList.get(i).id+" Q0 "+hitDoc.get("id")+" "+rank+" "+hits[j].score+" BM25");
 
 //                System.out.println(hits[j].score+' '+hitDoc.get("title")+"   "+hitDoc.get("id"));
 //                System.out.println(String.valueOf(i)+" - "+String.valueOf(j)+' '+qList.get(i).id+" Q0 "+hitDoc.get("id")+" "+String.valueOf(j)+" "+hits[j].score+" BM25");

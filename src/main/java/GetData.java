@@ -59,8 +59,10 @@ public class GetData {
 
 
     public static Directory getDirectory(Similarity mySimilarity) throws IOException {
+
         analyzer = new ComplexAnalyzer();
         IndexWriterConfig config = new IndexWriterConfig(analyzer);
+        
         config.setSimilarity(mySimilarity);
         IndexWriter iwriter = new IndexWriter(directory, config);
 
@@ -68,9 +70,7 @@ public class GetData {
         BufferedReader reader = null;
 
         reader = new BufferedReader(new FileReader(file));
-        String tempString = null;
-
-
+        String tempString = null; 
 
         while ((tempString = reader.readLine()) != null) {
 

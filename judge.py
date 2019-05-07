@@ -1,3 +1,4 @@
+# encoding:utf-8
 import random
 from pyNTCIREVAL import Labeler
 from pyNTCIREVAL.metrics import nERR, QMeasure, MSnDCG, nDCG
@@ -59,8 +60,11 @@ class ItemTest(object):
     def __init__(self, s):
         super(ItemTest, self).__init__()
         self.qid = int(s[0:4])
-        self.doc = s[7:7+66+1].strip()
-        self.score = float(s[7+66+4:-4])
+        self.doc = s[7:7+66+2].strip()
+        self.score = (s[7+66+4+1:-4])
+        # print (self.doc)
+        # print (s)
+
         # print(self.qid,self.doc,self.score)
         
 
@@ -86,34 +90,33 @@ class CMD(object):
                 self.DataBase.append(tempItem)
         f.close()
 
-    def test(self,filename):
+    def test(self,filename,k):
         f=open(filename)
 
         y_true = []
         y_pred = []
+
+        _id = []
         for line in f:
             if (str(line[0]).isdigit()):
                 tempItem = ItemTest(line.strip())
                 y_true.append(self.findItem(tempItem.qid,tempItem.doc))
                 y_pred.append(tempItem.score)
+                _id.append(tempItem.doc)
         f.close()
-        print (round(n_dcg(y_pred, y_true, k=20),3),'n_dcg     k = 20')  # y_pred: 预测的分数, y_true: 对应的relevance, k: cutoff
-        print (round(q_measure(y_pred, y_true, k=20),3),'q_measure k = 20')
-        print (round(n_err(y_pred, y_true, k=20),3),'n_err     k = 20')
-
-        print (round(n_dcg(y_pred, y_true, k=10),3),'n_dcg     k = 10')  # y_pred: 预测的分数, y_true: 对应的relevance, k: cutoff
-        print (round(q_measure(y_pred, y_true, k=10),3),'q_measure k = 10')
-        print (round(n_err(y_pred, y_true, k=10),3),'n_err     k = 10')
-
-        print (round(n_dcg(y_pred, y_true, k=5),3),'n_dcg     k = 5')  # y_pred: 预测的分数, y_true: 对应的relevance, k: cutoff
-        print (round(q_measure(y_pred, y_true, k=5),3),'q_measure k = 5')
-        print (round(n_err(y_pred, y_true, k=5),3),'n_err     k = 5')
-
+        print (round(n_dcg(y_pred, y_true, k=k),3),'n_dcg k = ' + str(k))  # y_pred: 预测的分数, y_true: 对应的relevance, k: cutoff
+        print (round(q_measure(y_pred, y_true, k=k),3),'q_mea k = ' + str(k))
+        print (round(n_err(y_pred, y_true, k=k),3),'n_err k = ' + str(k))
 
 
 
 myCMD = CMD()
 label_range = 4
 myCMD.build_Base("Data/ntcir14_test_label.txt")
-myCMD.test("res_20.txt")
+# myCMD.test("res_20.txt",k=20)
+# myCMD.test("res_10.txt",k=10)
+# myCMD.test("res_10.txt",k=5)
 
+myCMD.test("res_test.txt",k=20)
+myCMD.test("res_test.txt",k=10)
+myCMD.test("res_test.txt",k=5)

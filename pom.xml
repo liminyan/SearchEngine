@@ -65,6 +65,7 @@
     </dependencies>
 
     <build>
+        <defaultGoal>compile</defaultGoal>
         <plugins>
 
             <plugin>

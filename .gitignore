@@ -1,6 +1,5 @@
 info.txt
 *.json
-/Data
 *.iml
 /targer
 /.idea
@@ -10,3 +9,5 @@ res.txt
 *.s*
 *.a*
 *.f*
+term*.txt
+ntcir14*
